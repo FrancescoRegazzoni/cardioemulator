@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+import cardioemulator
+import argparse
+import matplotlib.pyplot as plt
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('file_PV_loops',
+                    help = 'CSV file containing the sample PV loops.',
+                    type = str)
+
+parser.add_argument('period',
+                    help = 'heartbeat period [s].',
+                    type = float)
+
+parser.add_argument('--EDPV',
+                    help = 'CSV file for the EDPV curve (simulated EDPVR approach). If this input is not provided, then the fitted EDPVR approach is employed.',
+                    default = None,
+                    type = str)
+
+parser.add_argument('--drop-cycles',
+                    help = 'Number of initials heartbeats to drop.',
+                    default = 0,
+                    type = int)
+
+parser.add_argument('-n', '--num-cycles',
+                    help = 'Number of heartbeats to consider.',
+                    default = None,
+                    type = int)
+
+parser.add_argument('-s', '--sampling',
+                    help = 'If provided, PV loops file is sampled every n-th rows.',
+                    default = 1,
+                    type = int)
+
+parser.add_argument('-c', '--chamber',
+                    help = 'Chamber to emulate (LV, RV, LA, RA). If passed, standard values are used for labels and --E-base-min/max.',
+                    default = None,
+                    type = str)
+
+parser.add_argument('--ED-ini',
+                    help = 'Time from the beginning of each heartbeat defining the beginning of the diastolic phase [s].',
+                    default = None,
+                    type = float)
+
+parser.add_argument('--ED-end',
+                    help = 'Time from the beginning of each heartbeat defining the end of the diastolic phase [s].',
+                    default = None,
+                    type = float)
+
+parser.add_argument('--E-base-min',
+                    help = 'Base elastance used to detect end systolic points (min) [mmHg/mL].',
+                    default = None,
+                    type = float)
+
+parser.add_argument('--E-base-max',
+                    help = 'Base elastance used to detect end systolic points (max) [mmHg/mL].',
+                    default = None,
+                    type = float)
+
+parser.add_argument('--label-activation',
+                    help = 'CSV column with an activation indicator (PV loops file).',
+                    default = None,
+                    type = str)
+
+parser.add_argument('--label-pressure',
+                    help = 'CSV column with pressure (PV loops file).',
+                    default = None,
+                    type = str)
+
+parser.add_argument('--label-volume',
+                    help = 'CSV column with volume (PV loops file).',
+                    default = None,
+                    type = str)
+
+parser.add_argument('--label-EDPVR-pressure',
+                    help = 'CSV column with pressure (EDPVR file).',
+                    default = None,
+                    type = str)
+
+parser.add_argument('--label-EDPVR-volume',
+                    help = 'CSV column with volume (EDPVR file).',
+                    default = None,
+                    type = str)
+
+parser.add_argument('--label-time',
+                    help = 'CSV column with time.',
+                    default = 'time',
+                    type = str)
+
+parser.add_argument('-o', '--output-file',
+                    help = 'JSON output file for the emulator.',
+                    default = None,
+                    type = str)
+
+parser.add_argument('-f', '--output-file-fig',
+                    help = 'Output file for figure.',
+                    default = None,
+                    type = str)
+
+parser.add_argument('-d', '--display-mode',
+                    help = 'Display the plot in interactive mode.',
+                    action = 'store_true')
+
+args = parser.parse_args()
+
+if args.chamber == 'LV':
+    label_pressure_PV_loops = 'pLV'
+    label_pressure_EDPV     = 'pLV'
+    label_volume_PV_loops   = 'VLV'
+    label_volume_EDPV       = 'VLV'
+    E_base_min = 2.0 # [mmHg/mL]
+    E_base_max = 4.0 # [mmHg/mL]
+    ED_ini = args.period * 7.0/8.0 # [s]
+    ED_end = args.period # [s]
+elif args.chamber == 'RV':
+    label_pressure_PV_loops = 'pRV'
+    label_pressure_EDPV     = 'pRV'
+    label_volume_PV_loops   = 'VRV'
+    label_volume_EDPV       = 'VRV'
+    E_base_min = 1.0 # [mmHg/mL]
+    E_base_max = 3.0 # [mmHg/mL]
+    ED_ini = args.period * 7.0/8.0 # [s]
+    ED_end = args.period # [s]
+elif args.chamber == 'LA':
+    label_pressure_PV_loops = 'pLA'
+    label_pressure_EDPV     = 'pLA'
+    label_volume_PV_loops   = 'VLA'
+    label_volume_EDPV       = 'VLA'
+    E_base_min = 0.1 # [mmHg/mL]
+    E_base_max = 0.5 # [mmHg/mL]
+    ED_ini = args.period * 0.25 # [s]
+    ED_end = args.period * 0.75 # [s]
+elif args.chamber == 'RA':
+    label_pressure_EDPV     = 'pRA'
+    label_pressure_PV_loops = 'pRA'
+    label_volume_PV_loops   = 'VRA'
+    label_volume_EDPV       = 'VRA'
+    E_base_min = 0.1 # [mmHg/mL]
+    E_base_max = 0.5 # [mmHg/mL]
+    ED_ini = args.period * 0.25 # [s]
+    ED_end = args.period * 0.75 # [s]
+else:
+    label_pressure_EDPV     = 'pressure'
+    label_pressure_PV_loops = 'pressure'
+    label_volume_PV_loops   = 'volume'
+    label_volume_EDPV       = 'volume'
+    E_base_min = 2.0 # [mmHg/mL]
+    E_base_max = 4.0 # [mmHg/mL]
+    ED_ini = args.period * 7.0/8.0 # [s]
+    ED_end = args.period # [s]
+
+if args.label_pressure is not None:
+    label_pressure_PV_loops = args.label_pressure
+if args.label_volume is not None:
+    label_volume_PV_loops = args.label_volume
+if args.label_EDPVR_pressure is not None:
+    label_pressure_EDPV = args.label_EDPVR_pressure
+if args.label_EDPVR_volume is not None:
+    label_volume_EDPV = args.label_EDPVR_volume
+if args.E_base_min is not None:
+    E_base_min = args.Emin
+if args.E_base_max is not None:
+    E_base_max = args.Emax
+if args.ED_ini is not None:
+    ED_ini = args.ED_ini
+if args.ED_end is not None:
+    ED_end = args.ED_end
+
+cardioemulator.build_emulator(args.file_PV_loops, args.period,
+                   file_EDPV = args.EDPV,
+                   PV_loops_sampling = args.sampling,
+                   label_activation = args.label_activation,
+                   label_pressure_PV_loops = label_pressure_PV_loops,
+                   label_volume_PV_loops = label_volume_PV_loops,
+                   label_pressure_EDPV = label_pressure_EDPV,
+                   label_volume_EDPV = label_volume_EDPV,
+                   label_time = args.label_time,
+                   E_base_min = E_base_min,
+                   E_base_max = E_base_max,
+                   ED_ini = ED_ini,
+                   ED_end = ED_end,
+                   cycles_to_drop = args.drop_cycles,
+                   num_cycles = args.num_cycles,
+                   output_file = args.output_file,
+                   output_file_fig = args.output_file_fig,
+                   show_fig = args.display_mode)
+
+if args.display_mode:
+    plt.show(block = True)

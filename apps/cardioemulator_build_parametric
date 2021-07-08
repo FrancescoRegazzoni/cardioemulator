@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+import cardioemulator
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('-A', '--emulator-A',
+                    help = 'JSON file encoding emulator A.',
+                    type = str)
+
+parser.add_argument('-a', '--param-A',
+                    help = 'Parameter value associated with emulator A.',
+                    type = float)
+
+parser.add_argument('-B', '--emulator-B',
+                    help = 'JSON file encoding emulator B.',
+                    type = str)
+
+parser.add_argument('-b', '--param-B',
+                    help = 'Parameter value associated with emulator B.',
+                    type = float)
+
+parser.add_argument('-o', '--output-file',
+                    help = 'JSON output file.',
+                    type = str)
+
+args = parser.parse_args()
+
+cardioemulator.build_emulator_parametric(
+            emulator_A = args.emulator_A, param_A = args.param_A,
+            emulator_B = args.emulator_B, param_B = args.param_B,
+            output_file = args.output_file)
