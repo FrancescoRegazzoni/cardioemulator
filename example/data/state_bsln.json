@@ -1,0 +1,14 @@
+{
+"V_LA" : 80,
+"V_LV" : 110,
+"V_RA" : 80,
+"V_RV" : 110,
+"p_AR_SYS" : 70,
+"p_VEN_SYS" : 40,
+"p_AR_PUL" : 25,
+"p_VEN_PUL" : 20,
+"Q_AR_SYS": 0,
+"Q_VEN_SYS": 0,
+"Q_AR_PUL": 0,
+"Q_VEN_PUL": 0
+}
