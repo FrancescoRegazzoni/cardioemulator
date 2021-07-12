@@ -159,9 +159,9 @@ if args.label_EDPVR_pressure is not None:
 if args.label_EDPVR_volume is not None:
     label_volume_EDPV = args.label_EDPVR_volume
 if args.E_base_min is not None:
-    E_base_min = args.Emin
+    E_base_min = args.E_base_min
 if args.E_base_max is not None:
-    E_base_max = args.Emax
+    E_base_max = args.E_base_max
 if args.ED_ini is not None:
     ED_ini = args.ED_ini
 if args.ED_end is not None:
