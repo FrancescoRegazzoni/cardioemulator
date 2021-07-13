@@ -1,8 +1,5 @@
-sphinx>=4.0
+sphinx==4.0.3
 pydata-sphinx-theme
 ipykernel
 nbsphinx
 pandoc
-numpy>=1.16
-scipy>=1.4
-pandas>=1.0.1
