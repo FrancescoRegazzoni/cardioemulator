@@ -55,7 +55,7 @@ html_theme_options = {
 	"icon_links": [
         {
             "name": "Paper",
-            "url": "https://www.mate.polimi.it/biblioteca/add/qmox/35-2021.pdf",
+            "url": "https://doi.org/10.1016/j.compbiomed.2021.104641",
             "icon": "fa fa-book",
         },
     ],

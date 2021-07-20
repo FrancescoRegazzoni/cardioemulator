@@ -28,7 +28,7 @@ Documentation
 References
 ----------
 
-.. [#paper] F. Regazzoni, A. Quarteroni "`Accelerating the convergence to a limit cycle in 3D cardiac electromechanical simulations through a data-driven 0D emulator <https://www.mate.polimi.it/biblioteca/add/qmox/35-2021.pdf>`_", *Computers in Biology and Medicine* (2021)
+.. [#paper] F. Regazzoni, A. Quarteroni "`Accelerating the convergence to a limit cycle in 3D cardiac electromechanical simulations through a data-driven 0D emulator <https://doi.org/10.1016/j.compbiomed.2021.104641>`_", *Computers in Biology and Medicine* 135 (2021) 104641
 
 Citing
 ------
@@ -40,7 +40,10 @@ Please cite this library as: ::
       title   = {Accelerating the convergence to a limit cycle in 3D cardiac
                  electromechanical simulations through a data-driven 0D emulator},
       journal = {Computers in Biology and Medicine},
-      year    = {2021}
+      volume  = {135},
+      pages   = {104641},
+      year    = {2021},
+      issn    = {0010-4825},
    }
 
 Contacts
