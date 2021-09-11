@@ -4,6 +4,22 @@ import copy
 from ._emulator import Emulator
 
 def transform_ES_elastance(emulator_data, factor):
+    """
+    Transform an emulator by applying a multiplicative factor to end systolic elastance.
+
+    Parameters
+    ----------
+    emulator_data : str, dict or Emulator
+        Emulator to be transformed.
+    factor : float
+        Multiplicative factor for end systolic elastance.
+
+    Returns
+    -------
+    emulator : Emulator
+        Transformed emulator.
+
+    """
 
     if isinstance(emulator_data, str):
         with open(emulator_data) as json_file:
@@ -17,6 +33,22 @@ def transform_ES_elastance(emulator_data, factor):
     return Emulator(emulator_data_new)
 
 def transform_time_shift(emulator_data, time_lag):
+    """
+    Transform an emulator by shifting in time the activation pattern.
+
+    Parameters
+    ----------
+    emulator_data : str, dict or Emulator
+        Emulator to be transformed.
+    time_lag : float [s]
+        Time lag.
+
+    Returns
+    -------
+    emulator : Emulator
+        Transformed emulator.
+
+    """
 
     if isinstance(emulator_data, str):
         with open(emulator_data) as json_file:
