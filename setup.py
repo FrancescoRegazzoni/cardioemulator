@@ -18,6 +18,7 @@ setup(
     packages = find_packages(),
     scripts = [
         'apps/cardioemulator_build',
-        'apps/cardioemulator_build_parametric'
+        'apps/cardioemulator_build_parametric',
+        'apps/cardioemulator_transform',
         ],
 )

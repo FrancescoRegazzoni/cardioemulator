@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+import cardioemulator
+import argparse
+import matplotlib.pyplot as plt
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('input_emulator',
+                    help = 'JSON input file for the emulator to transform.',
+                    type = str)
+
+parser.add_argument('output_emulator',
+                    help = 'JSON output file for the transformed emulator.',
+                    type = str)
+
+parser.add_argument('-E', '--ES-elastance',
+                    help = 'Multiplicative factor for end systolic elastance.',
+                    default = None,
+                    type = float)
+
+parser.add_argument('-s', '--time-shift',
+                    help = 'Shift in time the activation pattern.',
+                    default = None,
+                    type = float)
+
+args = parser.parse_args()
+
+emulator = cardioemulator.Emulator(args.input_emulator)
+
+if args.ES_elastance is not None:
+    emulator = cardioemulator.transform_ES_elastance(emulator, args.ES_elastance)
+
+if args.time_shift is not None:
+    emulator = cardioemulator.transform_time_shift(emulator, args.time_shift)
+
+emulator.save_file(args.output_emulator, verbose = True)
