@@ -76,7 +76,7 @@ def build_emulator(
         ``"mL"``, ``"m^3"``.
     pressure_unit_EDPV : str, optional
         Measure unit for pressure in the CSV file ``file_EDPV``. Allowed values are ``"mmHg"``,
-        ``"Pa"``, ``"kPa
+        ``"Pa"``, ``"kPa"``.
     volume_unit_EDPV : str, optional
         Measure unit for volume in the CSV file ``file_EDPV``. Allowed values are ``"L"``,
         ``"mL"``, ``"m^3"``.
@@ -399,16 +399,14 @@ def build_emulator(
     emulator['linear']['tC'] = time_C / period
     emulator['linear']['V0'] = ESPV_V0
 
+    emulator_instance = Emulator(emulator)
     if output_file is not None:
-        with open(output_file, 'w') as f:
-            json.dump(emulator, f, indent=4)
-        if verbose:
-            print('saved file %s' % output_file)
+        emulator_instance.save_file(output_file, verbose = verbose)
 
     if output_file_fig is not None:
         fig_out.savefig(output_file_fig)
 
-    return Emulator(emulator)
+    return emulator_instance
 
 def convert_pressure(dataset, field_name, measure_unit):
     if measure_unit == 'Pa':

@@ -55,10 +55,8 @@ def build_emulator_parametric(
     emulator['emulatorA'] = emulator_A
     emulator['emulatorB'] = emulator_B
 
+    emulator_instance = Emulator_parametric(emulator)
     if output_file is not None:
-        with open(output_file, 'w') as f:
-            json.dump(emulator, f, indent=4)
-        if verbose:
-            print('saved file %s' % output_file)
+        emulator_instance.save_file(output_file, verbose = verbose)
 
-    return Emulator_parametric(emulator)
+    return emulator_instance

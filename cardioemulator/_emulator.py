@@ -93,6 +93,20 @@ class Emulator:
         """
         return (1 - self.activation(t)) * self.EDPV(V) + self.activation(t) * self.ESPV(V)
 
+    def save_file(self, output_file, verbose = False):
+        """
+        Save the emulator in json format.
+
+        Parameters
+        ----------
+        output_file : str
+            File path.
+        """
+        with open(output_file, 'w') as f:
+            json.dump(self.data, f, indent = 4)
+        if verbose:
+            print('Saved file %s' % output_file)
+
 class Emulator_parametric:
     """
     Parametric 0D emulator of a cardiac chamber.
@@ -172,3 +186,17 @@ def get_PV_relationship(emulator_data, emulator_param = None):
         return lambda V, t: Emulator_parametric(emulator_data).PV(V, t, emulator_param)
     else:
         return Emulator(emulator_data).PV
+
+    def save_file(self, output_file, verbose = False):
+        """
+        Save the parametric emulator in json format.
+
+        Parameters
+        ----------
+        output_file : str
+            File path.
+        """
+        with open(output_file, 'w') as f:
+            json.dump(self.data, f, indent = 4)
+        if verbose:
+            print('Saved file %s' % output_file)
