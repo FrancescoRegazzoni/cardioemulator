@@ -304,7 +304,9 @@ def build_emulator(
             print('   duration relaxation:   %0.3f mmHg/mL' % duration_R)
 
     if make_plot:
-        V_plot = np.linspace(0, 200, 1000)
+        PV_V_lim = (0, 1.2 * np.max(data_loop[label_volume_PV_loops]))
+        PV_p_lim = (0, 1.2 * np.max(data_loop[label_pressure_PV_loops]))
+        V_plot = np.linspace(PV_V_lim[0], PV_V_lim[1], 1000)
         axs_PV.plot(V_plot, EDPV(V_plot), label = 'EDPVR')
         axs_PV.plot(V_plot, ESPV(V_plot), label = 'ESPVR')
 
@@ -357,8 +359,8 @@ def build_emulator(
         axs_act.set_xlabel('time [s]')
         axs_act.legend(loc = 'upper left', frameon = False, fontsize = 7, labelspacing = 0.2)
 
-        axs_PV.set_xlim((0, 1.2 * np.max(data_loop[label_volume_PV_loops])))
-        axs_PV.set_ylim((0, 1.2 * np.max(data_loop[label_pressure_PV_loops])))
+        axs_PV.set_xlim(PV_V_lim)
+        axs_PV.set_ylim(PV_p_lim)
         axs_PV.set_xlabel('volume [mL]')
         axs_PV.set_ylabel('pressure [mmHg]')
         axs_PV.set_title('pressure-volume relationships')
