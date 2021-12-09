@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+import cardioemulator
+import argparse
+import matplotlib.pyplot as plt
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('file_PV_loops',
+                    help = 'CSV file containing the sample PV loops.',
+                    type = str)
+
+parser.add_argument('--label-pressure-jump',
+                    help = 'CSV column with pressure jump (PV loops file).',
+                    default = None,
+                    type = str)
+
+parser.add_argument('--label-flow-rate',
+                    help = 'CSV column with flow rate through valve (PV loops file).',
+                    default = None,
+                    type = str)
+
+parser.add_argument('--label-opening-coefficient',
+                    help = 'CSV column with opening conefficient (PV loops file).',
+                    default = None,
+                    type = str)
+
+parser.add_argument('-o', '--output-file',
+                    help = 'JSON output file for the emulator',
+                    default = None,
+                    type = str)
+
+parser.add_argument('-d', '--display-mode',
+                    help = 'Display the plot in interactive mode.',
+                    action = 'store_true')
+
+args = parser.parse_args()
+
+cardioemulator.build_emulator_valve(args.file_PV_loops,
+                   label_pressure_jump = args.label_pressure_jump,
+                   label_flow_rate = args.label_flow_rate,
+                   label_opening_coefficient = args.label_opening_coefficient,
+                   output_file = args.output_file,
+                   show_fig = args.display_mode)
+
+if args.display_mode:
+    plt.show(block = True)

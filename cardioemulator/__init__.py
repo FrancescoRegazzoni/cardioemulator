@@ -34,5 +34,7 @@ from ._build_emulator import build_emulator
 from ._build_emulator_parametric import build_emulator_parametric
 from ._transform_emulator import transform_ES_elastance, transform_time_shift
 from ._compute_convergence import compute_convergence
+from ._emulator_valve import EmulatorValve, get_valve_R_function
+from ._build_emulator_valve import build_emulator_valve
 
 from ._version import __version__
