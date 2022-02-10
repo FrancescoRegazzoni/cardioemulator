@@ -17,6 +17,37 @@ def build_emulator_valve(
         output_file = None,
         verbose = True,
         show_fig = False):
+    """
+    Build an emulator for a cardiac valve.
+
+    Parameters
+    ----------
+    file_PV_loops : str
+        CSV file containing pressure jumps and flow rates across the valve.
+    label_pressure_jump : str
+        Label of the variable in the CSV file containing the pressure jump
+        across the valve.
+    label_flow_rate : str
+        Label for the variable in the CSV file containing the flow rate through
+        the valve.
+    label_opening_coefficient : str
+        Label for the variable in the CSV file containing the opening
+        coefficient of the valve. A value of 1 indicates a fully open valve, and
+        a value of 0 indicates a fully closed valve. Intermediate values
+        represent intermediate configurations, and are ignored.
+    output_file : str, optional
+        Path to a json file to store the dictionary encoding the emulator.
+    verbose : bool, optional
+        Flag to toggle verbosity.
+    show_fig : bool, optional
+        Flag to toggle plots visualization.
+
+    Returns
+    -------
+    emulator : EmulatorValve
+        Emulator.
+
+    """
 
     data_loop = pd.read_csv(file_PV_loops)
 
@@ -28,15 +59,6 @@ def build_emulator_valve(
         np.array(open_points[label_pressure_jump]), p0 = 0.0075)
     R_min = float(R_min)
     print("R_min = %0.4f mmHg / (ml/s)" % R_min)
-
-    # Fit the "valve closed" data points to get R_max.
-    closed_points = data_loop[data_loop[label_opening_coefficient] == 0]
-    # R_max, _      = curve_fit(line, np.array(closed_points[label_flow_rate]), \
-    #     np.array(closed_points[label_pressure_jump]), p0 = 75000)
-    # R_max = float(R_max)
-    # if R_max < 0:
-    #     print("Warning: fitted R_max < 0, setting R_max = 75000 mmHg / (ml/s)")
-    #     R_max = 75000
 
     # We set the maximum resistance always to 75000, regardless of data. This
     # prevents spurious effects (due to e.g. bad valve resolution in the RIIS

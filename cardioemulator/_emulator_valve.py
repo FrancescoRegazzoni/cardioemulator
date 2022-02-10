@@ -5,8 +5,9 @@ class EmulatorValve:
     """
     0D emulator of a valve.
 
-    Represents the valve as a function Q = delta_p / R(delta_p; R_min, R_max),
-    finding the values of Rmin and Rmax that fit given data.
+    Represents the valve as a function Q = delta_p / R(delta_p; R_min, R_max).
+    The resistance R is given by R = 10^(log10(R_min) + (log10(R_max) -
+    log10(R_min)) * H(delta_p)), with H the smoothed Heaviside function.
     """
 
     def __init__(self, emulator_data):
