@@ -60,6 +60,8 @@ def build_emulator_valve(
     R_min = float(R_min)
     print("R_min = %0.4f mmHg / (ml/s)" % R_min)
 
+    closed_points = data_loop[data_loop[label_opening_coefficient] == 0]
+
     # We set the maximum resistance always to 75000, regardless of data. This
     # prevents spurious effects (due to e.g. bad valve resolution in the RIIS
     # model) from being incorporated in the emulator.
