@@ -20,5 +20,6 @@ setup(
         'apps/cardioemulator_build',
         'apps/cardioemulator_build_parametric',
         'apps/cardioemulator_transform',
+        'apps/cardioemulator_build_valve'
         ],
 )
